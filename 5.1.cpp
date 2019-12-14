@@ -12,12 +12,10 @@ void solve() {
     LL n;
     char c;
     vector<LL> v;
-    cin >> n;
-    v.push_back(n);
-    while(cin >> c) {
+    do {
         cin >> n;
         v.push_back(n);
-    }
+    } while(cin >> c);
     for (LL i = 0; i < v.size();) {
         if (v[i] == 99) break;
         string s = string(5, '0') + to_string(v[i]);

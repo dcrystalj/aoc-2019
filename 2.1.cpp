@@ -12,12 +12,10 @@ void solve() {
     LL n;
     char c;
     vector<LL> v;
-    cin >> n;
-    v.push_back(n);
-    while(cin >> c) {
+    do {
         cin >> n;
         v.push_back(n);
-    }
+    } while(cin >> c);
     for (LL i = 0; i < v.size(); i += 4) {
         if (v[i] == 99) break;
         if (v[i] == 1) v[v[i+3]] = v[v[i+1]] + v[v[i+2]];

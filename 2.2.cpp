@@ -12,12 +12,10 @@ void solve() {
     LL n;
     char c;
     vector<LL> v;
-    cin >> n;
-    v.push_back(n);
-    while(cin >> c) {
+    do {
         cin >> n;
         v.push_back(n);
-    }
+    } while(cin >> c);
     vector<LL> copy = v;
     for (LL j = 0; j < v.size(); j++) {
         for (LL k = 0; k < v.size(); k++) {
