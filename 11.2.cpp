@@ -174,16 +174,16 @@ void solve() {
         v.push_back(n);
     } while(cin >> c);
     
-    Program p (v, {0});
+    Program p (v, {1});
     Robot r;
-    r.paint(false);
+    r.paint(true);
     bool is_white;
     do {
         intprogram(p); is_white = p.lastOutput;
         intprogram(p); r.is_right_rotation = p.lastOutput;
         r.paint(is_white);
         r.move();
-        p.inputs.push_front(r.currentColor());p.inputs.push_front(r.currentColor());break;
+        p.inputs.push_front(r.currentColor());
     } while(!p.is_halt);
     r.print();
 }
