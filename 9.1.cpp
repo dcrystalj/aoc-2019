@@ -9,36 +9,19 @@ using namespace std;
 template<typename... Args>
 void cline(Args... args){ ((cout << args << " "), ...);}
 
-struct VirtualMemory {
-    vector<LL> memory;
-    unordered_map<LL, LL> mapping;
-    LL cnt = 0;
-
-    auto getAddress(LL i) {
-        if (!HAS(mapping, i)) {
-            mapping[i] = cnt++;
-            memory.push_back(0);
-        }
-        return mapping[i];
+struct DD {
+    unordered_map<LL, LL> m;
+    void set(LL i, LL val) { m[i] = val; }
+    auto get(LL i, LL _default) {
+        if (!HAS(m, i)) m[i] = _default;
+        return &m[i];
     }
-
-    void setMemory(LL i, LL val) {
-        LL internal_addr = getAddress(i);
-        memory[internal_addr] = val;
-    }
-
-    auto getMemory(LL i) {
-        LL internal_addr = getAddress(i);
-        return &memory[internal_addr];
-    }
-
-    auto size() {
-        return memory.size();
-    }
+    auto get(LL i) { return get(i, 0); }
+    auto size() { return m.size(); }
 };
 
 struct Program {
-    VirtualMemory instructions;
+    DD instructions;
     list<LL> inputs;
     LL state = 0;
     LL lastOutput = 0;
@@ -47,9 +30,9 @@ struct Program {
         
 
     Program(vector<LL> v, list<LL> in) {
-        VirtualMemory vm;
+        DD vm;
         for (LL i = 0; i < v.size(); i++) {
-            vm.setMemory(i, v[i]);
+            vm.set(i, v[i]);
         }
         instructions = vm;
         inputs = in;
@@ -58,21 +41,21 @@ struct Program {
 
 auto param(Program &p, string s, LL i) {
     if(s[3-i] == '0') {
-        return p.instructions.getMemory(*p.instructions.getMemory(p.state+i));
+        return p.instructions.get(*p.instructions.get(p.state+i));
     } else if (s[3-i] == '2') {
-        return p.instructions.getMemory(p.relative_base + *p.instructions.getMemory(p.state+i));
+        return p.instructions.get(p.relative_base + *p.instructions.get(p.state+i));
     } else {
-        return p.instructions.getMemory(p.state+i);
+        return p.instructions.get(p.state+i);
     }
 }
 
 void intprogram(Program &p) {
     while (p.state < p.instructions.size()) {
-        if (*p.instructions.getMemory(p.state) == 99) {
+        if (*p.instructions.get(p.state) == 99) {
             p.is_halt = true;
             return;
         }
-        string s = string(5, '0') + to_string(*p.instructions.getMemory(p.state));
+        string s = string(5, '0') + to_string(*p.instructions.get(p.state));
         s = s.substr(s.size()-5, 5);
         LL opcode = stoll(s.substr(3, 2));
         LL *par1 = param(p, s, 1);

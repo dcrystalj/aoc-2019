@@ -9,33 +9,17 @@ using namespace std;
 template<typename... Args>
 void cline(Args... args){ ((cout << args << " "), ...);}
 
-struct VirtualMemory {
-    vector<LL> memory;
-    unordered_map<LL, LL> mapping;
-    LL cnt = 0;
-
-    auto getAddress(LL i) {
-        if (!HAS(mapping, i)) {
-            mapping[i] = cnt++;
-            memory.push_back(0);
-        }
-        return mapping[i];
+struct DD {
+    unordered_map<LL, LL> m;
+    void set(LL i, LL val) { m[i] = val; }
+    auto get(LL i, LL _default) {
+        if (!HAS(m, i)) m[i] = _default;
+        return &m[i];
     }
-
-    void setMemory(LL i, LL val) {
-        LL internal_addr = getAddress(i);
-        memory[internal_addr] = val;
-    }
-
-    auto getMemory(LL i) {
-        LL internal_addr = getAddress(i);
-        return &memory[internal_addr];
-    }
-
-    auto size() {
-        return memory.size();
-    }
+    auto get(LL i) { return get(i, 0); }
+    auto size() { return m.size(); }
 };
+
 
 struct Program {
     VirtualMemory instructions;
@@ -165,7 +149,7 @@ void solve() {
         v.push_back(n);
     } while(cin >> c);
     
-    Program p (v, {0});
+    Program p (v, {1});
     Robot r;
     bool is_white;
     do {
